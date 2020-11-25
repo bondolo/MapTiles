@@ -22,8 +22,6 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
     </properties>
     
     <build>
@@ -35,6 +33,7 @@
                     <version>3.8.1</version>
                     <configuration>                        
                         <showWarnings>true</showWarnings>
+                        <release>15</release>
                     </configuration>
                     <executions>
                         <execution>
