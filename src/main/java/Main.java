@@ -101,6 +101,7 @@ public final class Main {
 
         java.awt.EventQueue.invokeLater(() -> {
             f.pack();
+            f.setLocationRelativeTo(null);
             f.setVisible(true);
         });
     }
