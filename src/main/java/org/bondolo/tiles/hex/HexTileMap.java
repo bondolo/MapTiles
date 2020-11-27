@@ -23,7 +23,6 @@ package org.bondolo.tiles.hex;
 
 import org.bondolo.tiles.grid.GridTileMap;
 import java.awt.geom.Point2D;
-import static java.lang.Integer.MAX_VALUE;
 
 /**
  *  A Cartesian grid map composed of hexagonal tiles.
@@ -33,7 +32,7 @@ public class HexTileMap extends GridTileMap<HexTile, HexTileCoord, HexTileDimens
     /**
      * Construct a new map.
      *
-     * @param tiles
+     * @param tiles The tiles for this map.
      */
     public HexTileMap(HexTile tiles[][]) {
         super(tiles);
@@ -41,14 +40,14 @@ public class HexTileMap extends GridTileMap<HexTile, HexTileCoord, HexTileDimens
 
     @Override
     public HexTileCoord pointToCoord(Point2D point, HexTileDimension dim) {
-        final int sectionX = (int) (point.getX() / dim.getA());
-        final int offsetX =  (int) (point.getX() % dim.getA());
-        final int sectionY = (int) (point.getY() / (dim.getH() + dim.getSide()));
-        final int offsetY = (int) (point.getY() % (dim.getH() + dim.getSide()));
+        int sectionX = (int) (point.getX() / dim.getA());
+        int offsetX =  (int) (point.getX() % dim.getA());
+        int sectionY = (int) (point.getY() / (dim.getH() + dim.getSide()));
+        int offsetY = (int) (point.getY() % (dim.getH() + dim.getSide()));
 
-        final double m = dim.getH() / dim.getR();
-        final int coord_x;
-        final int coord_y;
+        double m = dim.getH() / dim.getR();
+        int coord_x;
+        int coord_y;
 
         if (0 == (sectionY % 2)) {
             // even row
@@ -104,14 +103,11 @@ public class HexTileMap extends GridTileMap<HexTile, HexTileCoord, HexTileDimens
 
     @Override
     public Point2D coordToPoint(HexTileCoord coord, HexTileDimension dim) {
-        final int coord_x = coord.getX();
-        final int coord_y = coord.getY();
+        int coord_x = coord.getX();
+        int coord_y = coord.getY();
 
-        assert (coord_x >= 0) && (coord_x < MAX_VALUE);
-        assert (coord_y >= 0) && (coord_y < MAX_VALUE);
-
-        final double pixel_x = coord_x * 2 * dim.getR() + (coord_y & 1) * dim.getR();
-        final double pixel_y = coord_y * (dim.getH() + dim.getSide());
+        double pixel_x = coord_x * 2 * dim.getR() + (coord_y & 1) * dim.getR();
+        double pixel_y = coord_y * (dim.getH() + dim.getSide());
 
         return new Point2D.Double(pixel_x, pixel_y);
     }

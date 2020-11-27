@@ -41,12 +41,17 @@ public abstract class GridTileCoord implements TileCoord {
     /**
      * Construct a new tile coordinate.
      *
-     * @param x tile horizontal location
-     * @param y tile vertical location.
+     * @param x non-negative tile horizontal location.
+     * @param y non-negative tile vertical location.
+     * @throws IllegalArgumentException if x or y coordinates are negative
      */
-    protected GridTileCoord(final int x, final int y) {
-        assert x >= 0;
-        assert y >= 0;
+    protected GridTileCoord(final int x, final int y) throws IllegalArgumentException {
+        if (x < 0) {
+            throw new IllegalArgumentException("x must be non-negative");
+        }
+        if (y < 0) {
+            throw new IllegalArgumentException("y must be non-negative");
+        }
 
         this.x = x;
         this.y = y;
@@ -55,7 +60,7 @@ public abstract class GridTileCoord implements TileCoord {
     @Override
     public boolean equals(Object target) {
         if(target.getClass() == this.getClass()) {
-            GridTileCoord likeMe = (GridTileCoord) target;
+            var likeMe = (GridTileCoord) target;
 
             return (likeMe.x == x) && (likeMe.y == y);
         }
@@ -65,12 +70,15 @@ public abstract class GridTileCoord implements TileCoord {
 
     @Override
     public int hashCode() {
-        return x ^ (x << 16) ^ (y) ^ (y << 16);
+        int hash = 7;
+        hash = 37 * hash + this.x;
+        hash = 37 * hash + this.y;
+        return hash;
     }
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        var result = new StringBuilder();
         int reducingx = x;
         boolean first = true;
         do {

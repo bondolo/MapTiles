@@ -25,8 +25,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
 /**
- * A view onto a {@link TimeMap map} of {@link Tile tiles}. The methods of this
- * object should only be called on the UI event thread and are not otherwise thread safe
+ * A view onto a {@link TileMap map} of {@link Tile tiles}.
  *
  * @param <D> Class of dimensions for this tile view class.
  */

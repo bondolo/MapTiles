@@ -19,34 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.bondolo.tiles.hex;
-
-import java.awt.Dimension;
-import org.bondolo.tiles.TileMapView;
 
 /**
- * A view onto a map composed of hex tiles.
+ *  An abstract map of regular geometric tiles.
  */
-@SuppressWarnings("serial")
-public class HexMapView extends TileMapView<HexTileMap, HexTile, HexTileDimension, HexTileCoord> {
+package org.bondolo.tiles;
 
-    /**
-     * Construct a new map view.
-     *
-     * @param map The map.
-     * @param scales The scales for this map.
-     * @param initialScale The initial scale.
-     */
-    public HexMapView(HexTileMap map, HexTileDimension scales[], int initialScale) {
-        super(map, scales, initialScale);
-    }
 
-    @Override
-    public Dimension getPreferredSize() {
-        var dim = getDimension(getScale());
-
-        return new Dimension(
-                (int) (dim.getA() * map.getXSize() + dim.getR()) + 2,
-                (int) ((dim.getH() + dim.getSide()) * map.getYSize() + dim.getH() + 1));
-    }
-}

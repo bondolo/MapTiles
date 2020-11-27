@@ -21,14 +21,14 @@
  */
 package org.bondolo.tiles.tri;
 
-import org.bondolo.tiles.grid.GridMapView;
 import java.awt.Dimension;
+import org.bondolo.tiles.TileMapView;
 
 /**
  * A view onto a map composed of triangle tiles.
  */
 @SuppressWarnings("serial")
-public class TriMapView extends GridMapView<TriTileMap, TriTile, TriTileDimension, TriTileCoord> {
+public class TriMapView extends TileMapView<TriTileMap, TriTile, TriTileDimension, TriTileCoord> {
 
     /**
      * Construct a new map view.
@@ -43,7 +43,7 @@ public class TriMapView extends GridMapView<TriTileMap, TriTile, TriTileDimensio
 
     @Override
     public Dimension getPreferredSize() {
-        TriTileDimension dim = getDimension(getScale());
+        var dim = getDimension(getScale());
 
         return new Dimension(
                 (int) (dim.getWidth() * (map.getXSize() + 1) ) / 2 + 1,

@@ -22,6 +22,7 @@
 package org.bondolo.tiles;
 
 import java.awt.geom.Point2D;
+import java.util.stream.Stream;
 
 /**
  *  A map composed of {@link Tile Tiles}.
@@ -39,6 +40,13 @@ public interface TileMap<T extends Tile<C>, C extends TileCoord, D extends TileD
      * @return The tile.
      */
     T getTile(C forTile);
+
+    /**
+     * Returns a stream of the tiles in the map.
+     *
+     * @return a stream of the tiles in the map.
+     */
+    Stream<T> tiles();
 
     /**
      * Return the coordinate associated with the specified point considering the

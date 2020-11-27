@@ -21,14 +21,14 @@
  */
 package org.bondolo.tiles.rect;
 
-import org.bondolo.tiles.grid.GridMapView;
 import java.awt.Dimension;
+import org.bondolo.tiles.TileMapView;
 
 /**
  * A view onto a map composed of square tiles.
  */
 @SuppressWarnings("serial")
-public class RectMapView extends GridMapView<RectTileMap, RectTile, RectTileDimension, RectTileCoord> {
+public class RectMapView extends TileMapView<RectTileMap, RectTile, RectTileDimension, RectTileCoord> {
 
     /**
      * Construct a new map view.
@@ -43,7 +43,7 @@ public class RectMapView extends GridMapView<RectTileMap, RectTile, RectTileDime
 
     @Override
     public Dimension getPreferredSize() {
-        RectTileDimension dim = getDimension(getScale());
+        var dim = getDimension(getScale());
 
         return new Dimension(
                 (int) (dim.getWidth() * map.getXSize()) + 1,

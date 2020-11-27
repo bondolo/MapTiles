@@ -22,11 +22,10 @@
 package org.bondolo.tiles.grid;
 
 import org.bondolo.tiles.*;
-import java.awt.Font;
 import static java.awt.Font.BOLD;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.Objects;
 
 /**
  * A single tile in a Cartesian grid map.
@@ -49,13 +48,12 @@ public abstract class GridTile<C extends GridTileCoord, D extends GridTileDimens
     /**
      * Construct a new grid tile.
      *
-     * @param coord
-     * @param label
+     * @param coord The coordinates of the tile
+     * @param label The label for the tile or null if unlabeled
+     * @throws NullPointerException if the coordinates of the tile.
      */
     protected GridTile(C coord, String label) {
-        assert coord != null;
-
-        this.coord = coord;
+        this.coord = Objects.requireNonNull(coord, "Null coordinates");
         this.label = label;
     }
 
@@ -63,7 +61,7 @@ public abstract class GridTile<C extends GridTileCoord, D extends GridTileDimens
     public boolean equals(Object target) {
         if(target.getClass() == this.getClass()) {
             @SuppressWarnings("unchecked")
-            GridTile<C,D> likeMe = (GridTile<C,D>) target;
+            var likeMe = (GridTile<C,D>) target;
 
             return coord.equals(likeMe.coord);
         }
@@ -77,12 +75,21 @@ public abstract class GridTile<C extends GridTileCoord, D extends GridTileDimens
     }
 
     @Override
+    public String toString() {
+        return null != getLabel()
+                ? getLabel()
+                : coord.toString();
+    }
+
+    @Override
     public C getCoord() {
         return coord;
     }
 
     /**
-     * @return the label
+     * Returns the tile label.
+     *
+     * @return the tile label or null if unlabeled.
      */
     public String getLabel() {
         return label;
@@ -90,17 +97,15 @@ public abstract class GridTile<C extends GridTileCoord, D extends GridTileDimens
 
     @Override
     public void draw(Graphics2D g, Point2D origin, D dim, boolean highlight) {
-        String drawing = (null != getLabel()) ? getLabel() : coord.toString();
-
+        var drawing = toString();
         // XXX This is too much work to be doing for each tile
-        Font font = g.getFont().deriveFont((float)(dim.side / 3.0));
+        var font = g.getFont().deriveFont((float)(dim.side / 3.0));
         if(highlight) {
             font = font.deriveFont(BOLD);
         }
         g.setFont(font);
 
-        FontMetrics fm = g.getFontMetrics();
-
+        var fm = g.getFontMetrics();
         double drawx = origin.getX() + (dim.getWidth() - fm.stringWidth(drawing)) / 2.0;
         double drawy = origin.getY() + (dim.getHeight() + fm.getAscent()) / 2.0;
 

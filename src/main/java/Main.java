@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import static java.awt.EventQueue.invokeLater;
 import org.bondolo.tiles.hex.HexMapView;
 import org.bondolo.tiles.hex.HexTile;
 import org.bondolo.tiles.hex.HexTileCoord;
@@ -30,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.stream.IntStream;
 import javax.swing.JFrame;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  * Mini-demo for tiles. Click on tiles to see the tile highlighted
@@ -57,49 +59,65 @@ public final class Main {
     /**
      * Tile scales, powers of 2 starting at {@link #BASE_SCALE_FACTOR}
      */
-    final static HexTileDimension scales[] = IntStream.range(0, TILE_SCALES)
-            .map(scale -> 1 << (scale + BASE_SCALE_FACTOR))
-            .mapToObj(HexTileDimension::new)
-            .toArray(HexTileDimension[]::new);
+    private final static HexTileDimension TILE_SCALE_DIMENSIONS[]
+            = IntStream.range(0, TILE_SCALES)
+                    .map(scale -> 1 << (scale + BASE_SCALE_FACTOR))
+                    .mapToObj(HexTileDimension::new)
+                    .toArray(HexTileDimension[]::new);
+
+    /**
+     * no instances
+     */
+    private Main() {
+
+    }
 
     /**
      * @param args the command line arguments (ignored)
      */
     public static void main(String[] args) {
 
-        HexTile tiles[][] = new HexTile[MAP_SIZE][MAP_SIZE];
+        var tiles = new HexTile[MAP_SIZE][MAP_SIZE];
 
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[x].length; y++) {
+        for (var x = 0; x < tiles.length; x++) {
+            for (var y = 0; y < tiles[x].length; y++) {
                 tiles[x][y] = new HexTile(new HexTileCoord(x, y), "(" + x + "," + y + ")");
             }
         }
 
-        HexTileMap map = new HexTileMap(tiles);
-        HexMapView view = new HexMapView(map, scales, INITIAL_SCALE);
+        var map = new HexTileMap(tiles);
+        var view = new HexMapView(map, TILE_SCALE_DIMENSIONS, INITIAL_SCALE);
         view.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point2D click = new Point2D.Double((double) e.getX(), (double) e.getY());
-                HexTileCoord coord = view.pointToCoord(click);
+                System.out.println("Click at " + click);
+                var coord = view.pointToCoord(click);
 
                 if (null != coord) {
-                    Point2D origin = view.coordToPoint(coord);
-                    HexTileDimension dim = view.getDimension(view.getScale());
-                    HexTile tile = map.getTile(coord);
-                    tile.draw((Graphics2D) view.getGraphics(), origin, dim, true);
+                    var origin = view.coordToPoint(coord);
+                    var dim = view.getDimension(view.getScale());
+                    var tile = map.getTile(coord);
+                    var wasSelected = view.isSelected(tile);
+                    if (!wasSelected) {
+                        view.addToSelection(tile);
+                    } else {
+                        view.removeFromSelection(tile);
+                    }
+                    System.out.println((wasSelected ? "Deselected" : "Selected") + " tile " + tile);
+                    tile.draw((Graphics2D) view.getGraphics(), origin, dim, !wasSelected);
                 }
             }
         });
 
-        JFrame f = new JFrame("Map");
+        var f = new JFrame("Map");
         f.setTitle("Map Tiles Demonstration (click on tiles)");
-        f.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         f.getContentPane().add("Center", view);
 
-        java.awt.EventQueue.invokeLater(() -> {
+        invokeLater(() -> {
             f.pack();
             f.setLocationRelativeTo(null);
             f.setVisible(true);

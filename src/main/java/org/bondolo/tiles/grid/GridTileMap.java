@@ -23,46 +23,55 @@ package org.bondolo.tiles.grid;
 
 import org.bondolo.tiles.*;
 import java.awt.geom.Point2D;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
- *  A map of tiles composed as a Cartesian grid of tiles.
+ * A map of tiles composed as a Cartesian grid of tiles.
  *
  * @param <T> Class of tiles in this map.
  * @param <C> Class of tile coordinates in this map.
  * @param <D> Class of tile dimensions in this map.
  */
-public abstract class GridTileMap<T extends GridTile<C,D>, C extends GridTileCoord, D extends GridTileDimension> implements TileMap<T,C,D> {
+public abstract class GridTileMap<T extends GridTile<C, D>, C extends GridTileCoord, D extends GridTileDimension> implements TileMap<T, C, D> {
 
     /**
      * Tiles for this map.
      */
     private final T tiles[][];
 
-    public enum ORIGIN {
-       TOP_LEFT,
-       MIDDLE_LEFT,
-       BOTTOM_LEFT,
-       TOP_CENTER,
-       MIDDLE_CENTER,
-       BOTTOM_CENTER,
-       TOP_RIGHT,
-       MIDDLE_RIGHT,
-       BOTTOM_RIGHT;
-    }
-
     /**
      * Construct a new map of tiles.
      *
      * @param tiles The tiles for this map.
+     * @throws IllegalArgumentException if tiles is empty, the first row of tiles is empty or any of the
+     * rows length does not match the length of the first row.
+     * @throws NullPointerException if the tiles, or any row is null.
      */
-    protected GridTileMap(final T tiles[][]) {
-        assert tiles.length > 0;
-        assert tiles[0].length > 0;
-        for(T[] row : tiles) {
-            assert row.length == tiles[0].length;
+    protected GridTileMap(T tiles[][]) {
+        if (Objects.requireNonNull(tiles, "Null tiles").length == 0) {
+            throw new IllegalArgumentException("empty tiles");
+        }
+        var firstRow = tiles[0];
+        if (Objects.requireNonNull(firstRow, "Null tiles row").length == 0) {
+            throw new IllegalArgumentException("empty tile row");
         }
 
-        this.tiles = tiles.clone();
+        // clone and check the input arrays shape
+        this.tiles = java.util.Arrays.stream(tiles)
+                .peek(row -> {
+                    if (Objects.requireNonNull(row, "null row").length != firstRow.length) {
+                        throw new IllegalArgumentException("inconsistent row length");
+                    }
+                })
+                .map(T[]::clone)
+                .toArray(size -> {
+                    @SuppressWarnings("unchecked")
+                    T[][] map = (T[][]) Array.newInstance(tiles.getClass().getComponentType(), size);
+                    return map;
+                });
     }
 
     /**
@@ -89,17 +98,24 @@ public abstract class GridTileMap<T extends GridTile<C,D>, C extends GridTileCoo
      * @param x The horizontal index of the requested tile.
      * @param y The vertical index of the requested tile.
      * @return The tile.
+     * @throws IllegalArgumentException if x or y is not in range
      */
-    public T getTile(final int x, final int y) {
-        if((x < 0) || (x >= tiles.length)) {
+    public T getTile(int x, int y) {
+        if ((x < 0) || (x >= tiles.length)) {
             throw new IllegalArgumentException("invalid X coordinate");
         }
 
-        if((y < 0) || (y >= tiles[x].length)) {
+        if ((y < 0) || (y >= tiles[x].length)) {
             throw new IllegalArgumentException("invalid Y coordinate");
         }
 
         return tiles[x][y];
+    }
+
+    @Override
+    public Stream<T> tiles() {
+        return Arrays.stream(tiles)
+                .flatMap(row -> Arrays.stream(row));
     }
 
     @Override
@@ -110,21 +126,21 @@ public abstract class GridTileMap<T extends GridTile<C,D>, C extends GridTileCoo
         return getTile(x, y);
     }
 
-   /**
-    * Returns the center point of the specified coordinate for the specified dimension.
-    *
-    * HACK : This does not work for triangles and non-regular hexagons.
-    *
-    * @param coord coordinate who's center point is desired.
-    * @param dim dimension to be used in determining the point.
-    * @return The point location.
-    */
+    /**
+     * Returns the center point of the specified coordinate for the specified dimension.
+     *
+     * HACK : This does not work for triangles and non-regular hexagons.
+     *
+     * @param coord coordinate who's center point is desired.
+     * @param dim dimension to be used in determining the point.
+     * @return The point location.
+     */
     @Override
-   public Point2D coordToCentroidPoint(C coord, D dim) {
-        Point2D origin = coordToPoint(coord, dim);
+    public Point2D coordToCentroidPoint(C coord, D dim) {
+        var origin = coordToPoint(coord, dim);
 
         origin.setLocation(origin.getX() + dim.getWidth() / 2, origin.getY() + dim.getHeight() / 2);
 
         return origin;
-   }
+    }
 }

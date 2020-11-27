@@ -21,22 +21,23 @@
  */
 package org.bondolo.tiles;
 
+import static java.awt.EventQueue.isDispatchThread;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import static java.awt.RenderingHints.KEY_ANTIALIASING;
 import static java.awt.RenderingHints.VALUE_ANTIALIAS_ON;
 import java.awt.geom.Point2D;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 import javax.swing.JComponent;
 
 /**
- * A view onto a {@link TimeMap map} of {@link Tile tiles}. The methods of this
- * object should only be called on the UI event thread and are not otherwise thread safe
+ * A view onto a {@link TileMap map} of {@link Tile tiles}. The view has associated dimensioned scales for the
+ * view, a current scale and the current selection of tiles within the view.
  *
  * @param <M> The class of the tile map.
  * @param <T> The class of a tile in the map.
@@ -46,6 +47,12 @@ import javax.swing.JComponent;
 @SuppressWarnings("serial")
 public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> & TileView<D>, D extends TileDimension, C extends TileCoord> extends JComponent {
 
+    /**
+     * Rendering hints we will use for drawing.
+     *
+     * Turn on anti-aliasing.
+     */
+    private static final RenderingHints HINTS = new RenderingHints(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
     /**
      * The map associated with this view.
      */
@@ -61,7 +68,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     /**
      * The current selection in this view.
      */
-    private final HashSet<T> selection = new HashSet<>();
+    private final Set<T> selection = new HashSet<>();
 
     /**
      * Construct a new map view.
@@ -69,10 +76,10 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
      * @param map The map for this view.
      * @param scales The tile dimensions (scales) defined for this view.
      * @param initialScale The initial scale value to use for this view.
+     * @throws IllegalArgumentException if scales is empty or initial scale is invalid
+     * @throws NullPointerException if map or scales are null
      */
     protected TileMapView(M map, final D scales[], int initialScale) {
-        super();
-
         this.map = Objects.requireNonNull(map, "Null map");
         this.scales = Objects.requireNonNull(scales, "Null scales").clone();
         this.scale = initialScale;
@@ -88,21 +95,20 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
 
     @Override
     protected void paintComponent(Graphics g) {
+        assert isDispatchThread() : "Drawing on wrong thread " + Thread.currentThread();
         assert g instanceof Graphics2D : "graphics environment should be a Graphics2D";
-        Graphics2D g2 = (Graphics2D) g;
-
-        // Turn on anti-aliasing.
-        RenderingHints hints = new RenderingHints(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON);
-        g2.addRenderingHints(hints);
-
         // Wipe the old.
         super.paintComponent(g);
+
+        var g2 = (Graphics2D) g;
+        g2.addRenderingHints(HINTS);
 
         drawMap(g2);
     }
 
     /**
      * The current scale value used for this view.
+     *
      * @return the scale
      */
     public int getScale() {
@@ -110,15 +116,21 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     }
 
     /**
-     * Set the current scale being used for this view.
+     * Set the scale being used for this view.
      *
-     * @param scale
+     * @param scale the scale being used for this view. Must be {@code 0} – {@link #getScalesCount()}-1
      * @return the scale value set.
+     * @throws IllegalArgumentException if the scale is not in range
      */
-    public int setScale(int scale) {
-        assert (scale >= 0) && (scale < getScalesCount());
+    public int setScale(int scale) throws IllegalArgumentException {
+        assert isDispatchThread() : "Drawing on wrong thread " + Thread.currentThread();
+        if ((scale < 0) || (scale >= getScalesCount())) {
+            throw new IllegalArgumentException("Illegal scale value (0-" + (getScalesCount() - 1) + ") : " + scale);
+        }
 
         this.scale = scale;
+
+        repaint();
 
         return scale;
     }
@@ -133,11 +145,9 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     }
 
     /**
-     * Return an array containing the tile dimensions (scales) defined for this
-     * view.
+     * Return an array containing the tile dimensions (scales) defined for this view.
      *
-     * @return an array containing the tile dimensions (scales) defined for this
-     * view.
+     * @return an array containing the tile dimensions (scales) defined for this view.
      */
     public D[] getScales() {
         return scales.clone();
@@ -156,8 +166,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     }
 
     /**
-     * Return the tile coordinate associated with the specified point in 2D
-     * space.
+     * Return the tile coordinate associated with the specified point in 2D space.
      *
      * @param point The pixel position to translate.
      * @return The tile coordinates.
@@ -167,12 +176,10 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     }
 
     /**
-     * Returns the point closest to the origin (0,0) for the tile at the
-     * specified coordinates.
+     * Returns the point closest to the origin (0,0) for the tile at the specified coordinates.
      *
      * @param coord The coordinate who's origin point is desired.
-     * @return The point closest to the origin (0,0) for the tile at the
-     * specified coordinate.
+     * @return The point closest to the origin (0,0) for the tile at the specified coordinate.
      */
     public final Point2D coordToPoint(C coord) {
         return map.coordToPoint(coord, getDimension(scale));
@@ -184,9 +191,11 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
      * @param tile the tile to be selected.
      */
     public void addToSelection(T tile) {
+        assert isDispatchThread() : "Drawing on wrong thread " + Thread.currentThread();
         if (selection.add(tile)) {
-            final D dim = getDimension(scale);
-            Point2D origin = map.coordToPoint(tile.getCoord(), dim);
+            // repaint tile if added
+            var dim = getDimension(scale);
+            var origin = map.coordToPoint(tile.getCoord(), dim);
             repaint((int) origin.getX(), (int) origin.getY(), (int) dim.getWidth(), (int) dim.getHeight());
         }
     }
@@ -197,27 +206,35 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
      * @param tile the tile to be selected.
      */
     public void removeFromSelection(T tile) {
+        assert isDispatchThread() : "Drawing on wrong thread " + Thread.currentThread();
         if (selection.remove(tile)) {
-            final D dim = getDimension(scale);
-            Point2D origin = map.coordToPoint(tile.getCoord(), dim);
+            // repaint tile if removed
+            var dim = getDimension(scale);
+            var origin = map.coordToPoint(tile.getCoord(), dim);
             repaint((int) origin.getX(), (int) origin.getY(), (int) dim.getWidth(), (int) dim.getHeight());
         }
     }
 
     /**
-     * Clear the slection for this view.
+     * Clear the selection for this view.
      */
     public void clearSelection() {
-        final Set<T> clear = Collections.emptySet();
-        setSelection(clear);
+        setSelection(Set.of());
     }
 
-    public void setSelection(final Set<? extends T> newSelection) {
-        boolean selectionChanged = !selection.equals(newSelection);
+    /**
+     * Replace the current view selection with the provided selection of tiles.
+     *
+     * @param replacement The replacement view selection
+     * @throws NullPointerException if the replacement set is null
+     */
+    public void setSelection(Set<? extends T> replacement) {
+        assert isDispatchThread() : "Drawing on wrong thread " + Thread.currentThread();
+        boolean selectionChanged = !selection.equals(Objects.requireNonNull(replacement, "null replacement selection"));
 
         if (selectionChanged) {
             selection.clear();
-            selection.addAll(newSelection);
+            selection.addAll(replacement);
             repaint();
         }
     }
@@ -235,26 +252,49 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
     /**
      * Returns an iterator over the tiles in the selection.
      *
-     * @return An iterator over the tiles in the selection. The iterator is not
-     * thread safe. Any changes to the selection will cause the iterator to
-     * fail.
+     * @return An iterator over the tiles in the selection. The iterator is not thread safe. Any changes to
+     * the selection will cause the iterator to fail.
      */
     public Iterator<T> selectionIterator() {
         return selection.iterator();
     }
 
     /**
-     * Draw the map at the current scale into the provided graphics environment.
+     * Returns a stream of the tiles in the selection.
      *
-     * @param g the destination graphics environment for the drawing
+     * @return a stream of the tiles in the selection.
      */
-    protected abstract void drawMap(final Graphics2D g);
+    public Stream<T> selection() {
+        return selection.stream();
+    }
 
     /**
      * Draw the map at the current scale into the provided graphics environment.
      *
+     * @param g2 the destination graphics environment for the drawing
+     */
+    protected void drawMap(Graphics2D g2) {
+        map.tiles().forEach(tile -> drawTile(g2, tile));
+    }
+
+    /**
+     * Draw a map at the current scale into the provided graphics environment.
+     *
      * @param g the destination graphics environment for the drawing
      * @param tile the tile to draw.
      */
-    protected abstract void drawTile(final Graphics2D g, T tile);
+    protected void drawTile(Graphics2D g, T tile) {
+        var coord = tile.getCoord();
+        var origin = coordToPoint(coord);
+        var dim = getDimension(getScale());
+
+        var currentclip = g.getClip();
+        if ((null == currentclip)
+                || currentclip.intersects(origin.getX(), origin.getY(), dim.getWidth(), dim.getHeight())) {
+            g.setBackground(getBackground());
+            g.setColor(getForeground());
+
+            tile.draw(g, origin, dim, isSelected(tile));
+        }
+    }
 }

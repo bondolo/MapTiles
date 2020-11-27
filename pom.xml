@@ -6,7 +6,7 @@
     <groupId>org.bondolo</groupId>
     <artifactId>MapTiles</artifactId>
     <name>Map Tiles</name>
-    <description>Provides basic support for grids of regular geometric tiles.</description>
+    <description>Provides basic support for maps of regular geometric tiles.</description>
     <licenses>
         <license>
             <name>MIT</name>
@@ -39,6 +39,10 @@
                         <execution>
                             <id>default-compile</id>
                             <configuration>
+                                <fork>true</fork>
+                                <compilerArgs>
+                                    <arg>-Xlint:all</arg>
+                                </compilerArgs>
                                 <showDeprecation>true</showDeprecation>
                             </configuration>
                         </execution>

@@ -19,34 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.bondolo.tiles.hex;
-
-import java.awt.Dimension;
-import org.bondolo.tiles.TileMapView;
 
 /**
- * A view onto a map composed of hex tiles.
+ * An abstract {@link org.bondolo.tiles.hex.HexTileMap hex map} of
+ * {@link org.bondolo.tiles.hex.HexTile hex tiles}. A hex tile has
+ * {@link org.bondolo.tiles.hex.HexTileCoord coordinates}, and when part of a
+ * {@link org.bondolo.tiles.hex.HexMapView view} of tiles, may have a
+ * {@link org.bondolo.tiles.hex.HexTileDimension} and a
+ * local {@link org.bondolo.tiles.TileView view}.
  */
-@SuppressWarnings("serial")
-public class HexMapView extends TileMapView<HexTileMap, HexTile, HexTileDimension, HexTileCoord> {
-
-    /**
-     * Construct a new map view.
-     *
-     * @param map The map.
-     * @param scales The scales for this map.
-     * @param initialScale The initial scale.
-     */
-    public HexMapView(HexTileMap map, HexTileDimension scales[], int initialScale) {
-        super(map, scales, initialScale);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        var dim = getDimension(getScale());
-
-        return new Dimension(
-                (int) (dim.getA() * map.getXSize() + dim.getR()) + 2,
-                (int) ((dim.getH() + dim.getSide()) * map.getYSize() + dim.getH() + 1));
-    }
-}
+package org.bondolo.tiles.hex;

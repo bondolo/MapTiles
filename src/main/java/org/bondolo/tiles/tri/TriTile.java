@@ -1,20 +1,20 @@
 /*
  * Copyright © 2011, 2020 Mike Duigou
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights 
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
- * copies of the Software, and to permit persons to whom the Software is 
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in 
+ *
+ * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
@@ -45,12 +45,11 @@ public class TriTile extends GridTile<TriTileCoord, TriTileDimension> {
     }
 
     @Override
-    public void draw(final Graphics2D g, final Point2D origin, final TriTileDimension dim, boolean highlight) {
-        final GeneralPath p = new GeneralPath(WIND_NON_ZERO, 10);
-
-        final double x = origin.getX();
-        final double y = origin.getY();
-        final double s = dim.getSide();
+    public void draw(final Graphics2D g, Point2D origin, TriTileDimension dim, boolean highlight) {
+        var p = new GeneralPath(WIND_NON_ZERO, 10);
+        double x = origin.getX();
+        double y = origin.getY();
+        double s = dim.getSide();
 
         if((0 != (coord.getX() % 2) ^ (0 != (coord.getY() % 2)))) {
             p.moveTo(x, y);

@@ -37,9 +37,12 @@ public abstract class GridTileDimension implements TileDimension {
      * Construct a new dimension for a grid of tiles.
      *
      * @param side length of a side.
+     * @throws IllegalArgumentException if side length is negative
      */
-    protected GridTileDimension(int side) {
-        assert side > 0;
+    protected GridTileDimension(int side) throws IllegalArgumentException {
+        if (side < 0) {
+            throw new IllegalArgumentException("side must be non-negative");
+        };
 
         this.side = side;
     }

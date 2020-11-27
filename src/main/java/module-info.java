@@ -20,13 +20,20 @@
  * SOFTWARE.
  */
 
+/**
+ * Provides basic support for maps of regular geometric tiles.
+ *
+ * @serial exclude
+ */
 module org.bondolo.tiles {
+    // interface
     exports org.bondolo.tiles;
+    // abstract Cartesian grid
     exports org.bondolo.tiles.grid;
+    // regular polygon tilings
     exports org.bondolo.tiles.hex;
     exports org.bondolo.tiles.rect;
     exports org.bondolo.tiles.tri;
 
-    requires java.desktop;
-    requires java.logging;
+    requires transitive java.desktop;
 }
