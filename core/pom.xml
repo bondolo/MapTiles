@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bondolo</groupId>
-    <artifactId>Tiles</artifactId>
-    <name>Map Tiles Reactor</name>
+    <artifactId>MapTiles</artifactId>
+    <name>Map Tiles</name>
     <description>Provides basic support for maps of regular geometric tiles.</description>
     <licenses>
         <license>
@@ -15,20 +15,15 @@
         </license>
     </licenses>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <organization>
         <name>Mike Duigou</name>
     </organization>
-
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <modules>
-        <module>core</module>
-        <module>tictactoe</module>
-    </modules>
-
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -36,7 +31,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
-                    <configuration>
+                    <configuration>                        
                         <showWarnings>true</showWarnings>
                         <release>15</release>
                     </configuration>
