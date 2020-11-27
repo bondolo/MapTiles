@@ -26,9 +26,11 @@ import org.bondolo.tiles.TileMapView;
 
 /**
  * A view onto a map composed of triangle tiles.
+ *
+ * @param <TT> type of tiles in the map
  */
 @SuppressWarnings("serial")
-public class TriMapView extends TileMapView<TriTileMap, TriTile, TriTileDimension, TriTileCoord> {
+public class TriMapView<TT extends TriTile> extends TileMapView<TriTileMap<TT>, TT, TriTileDimension, TriTileCoord> {
 
     /**
      * Construct a new map view.
@@ -37,7 +39,7 @@ public class TriMapView extends TileMapView<TriTileMap, TriTile, TriTileDimensio
      * @param scales The scales for this map.
      * @param initialScale The initial scale.
      */
-    public TriMapView(TriTileMap map, TriTileDimension scales[], int initialScale) {
+    public TriMapView(TriTileMap<TT> map, TriTileDimension scales[], int initialScale) {
         super(map, scales, initialScale);
     }
 

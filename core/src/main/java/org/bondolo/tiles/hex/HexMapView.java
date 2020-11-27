@@ -26,9 +26,11 @@ import org.bondolo.tiles.TileMapView;
 
 /**
  * A view onto a map composed of hex tiles.
+ *
+ * @param <HT> Type of hex tiles in the map
  */
 @SuppressWarnings("serial")
-public class HexMapView extends TileMapView<HexTileMap, HexTile, HexTileDimension, HexTileCoord> {
+public class HexMapView<HT extends HexTile> extends TileMapView<HexTileMap<HT>, HT, HexTileDimension, HexTileCoord> {
 
     /**
      * Construct a new map view.
@@ -37,7 +39,7 @@ public class HexMapView extends TileMapView<HexTileMap, HexTile, HexTileDimensio
      * @param scales The scales for this map.
      * @param initialScale The initial scale.
      */
-    public HexMapView(HexTileMap map, HexTileDimension scales[], int initialScale) {
+    public HexMapView(HexTileMap<HT> map, HexTileDimension scales[], int initialScale) {
         super(map, scales, initialScale);
     }
 

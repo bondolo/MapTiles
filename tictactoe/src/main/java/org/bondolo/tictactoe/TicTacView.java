@@ -25,8 +25,6 @@ import java.awt.BasicStroke;
 import static java.awt.BasicStroke.CAP_ROUND;
 import static java.awt.BasicStroke.JOIN_ROUND;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import javax.swing.UIManager;
 import static javax.swing.UIManager.getColor;
 
 import org.bondolo.tiles.rect.RectMapView;
@@ -34,8 +32,11 @@ import org.bondolo.tiles.rect.RectTileDimension;
 
 /**
  * A view of a Tic Tac Toe game.
+ *
+ * @serial exclude
  */
-public class TicTacView extends RectMapView {
+@SuppressWarnings("serial")
+public class TicTacView extends RectMapView<TicTacTile> {
 
     public TicTacView(TicTacMap board, RectTileDimension scales[], int initialScale) {
         super(board, scales, initialScale);
@@ -44,8 +45,8 @@ public class TicTacView extends RectMapView {
     @Override
     protected void drawMap(final Graphics2D g) {
         var dim = getDimension(getScale());
-        var insety = dim.getHeight() / 10;
-        var insetx = dim.getWidth() / 10;
+        double insety = dim.getHeight() / 10;
+        double insetx = dim.getWidth() / 10;
 
         // draw grid.
         g.setColor(getColor("Separator.foreground"));
@@ -54,9 +55,9 @@ public class TicTacView extends RectMapView {
         // column lines
         var columnTop = map.coordToPoint(map.getTile(0, 0).getCoord(), dim);
         var columnBottom = map.coordToPoint(map.getTile(0, map.getYSize() - 1).getCoord(), dim);
-        var top = columnTop.getY() + insety;
-        var bottom = columnBottom.getY() + dim.getHeight() - insety;
-        for(var x = 1; x < map.getXSize(); x++) {
+        double top = columnTop.getY() + insety;
+        double bottom = columnBottom.getY() + dim.getHeight() - insety;
+        for(int x = 1; x < map.getXSize(); x++) {
             var column = map.coordToPoint(map.getTile(x, 0).getCoord(), dim);
             g.drawLine((int) column.getX(), (int) top, (int) column.getX(), (int) bottom);
         }
@@ -64,9 +65,9 @@ public class TicTacView extends RectMapView {
         // row lines
         var rowLeft = map.coordToPoint(map.getTile(0, 0).getCoord(), dim);
         var rowRight = map.coordToPoint(map.getTile(map.getXSize() - 1, 0).getCoord(), dim);
-        var left = rowLeft.getX() + insetx;
-        var right = rowRight.getX() + dim.getWidth() - insetx;
-        for(var y = 1; y < map.getXSize(); y++) {
+        double left = rowLeft.getX() + insetx;
+        double right = rowRight.getX() + dim.getWidth() - insetx;
+        for(int y = 1; y < map.getXSize(); y++) {
             var row = map.coordToPoint(map.getTile(0,y).getCoord(), dim);
             g.drawLine((int) left, (int) row.getY(), (int) right, (int) row.getY());
         }

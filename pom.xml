@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.bondolo</groupId>
     <artifactId>Tiles</artifactId>
-    <name>Map Tiles Reactor</name>
-    <description>Provides basic support for maps of regular geometric tiles.</description>
+    <name>Tiles Reactor</name>
+    <description>Reactor project for map tiles and demos</description>
     <licenses>
         <license>
             <name>MIT</name>

@@ -26,15 +26,17 @@ import java.awt.geom.Point2D;
 
 /**
  *  A Cartesian grid map composed of triangular tiles.
+ *
+ * @param <TT> Type of tiles in the map
  */
-public class TriTileMap extends GridTileMap<TriTile, TriTileCoord, TriTileDimension> {
+public class TriTileMap<TT extends TriTile> extends GridTileMap<TT, TriTileCoord, TriTileDimension> {
 
     /**
      * Construct a new map.
      *
      * @param tiles The tiles for this map
      */
-    public TriTileMap(TriTile tiles[][]) {
+    public TriTileMap(TT tiles[][]) {
         super(tiles);
     }
 

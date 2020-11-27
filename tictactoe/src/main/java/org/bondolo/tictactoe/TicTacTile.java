@@ -51,6 +51,7 @@ public class TicTacTile extends RectTile {
         X,
         O;
     };
+
     /**
      * The current state of this tile.
      */
@@ -83,7 +84,7 @@ public class TicTacTile extends RectTile {
     }
 
     @Override
-    public void draw(final Graphics2D g, final Point2D origin, final RectTileDimension dim, final boolean highlight) {
+    public void draw(Graphics2D g, Point2D origin, RectTileDimension dim, boolean highlight) {
         final var mark = switch (getState()) {
             case X -> X;
             case O -> O;
@@ -92,12 +93,12 @@ public class TicTacTile extends RectTile {
 
         if (null != mark) {
             // draw the mark
-            final var insetx = dim.getWidth() / 6;
-            final var insety = dim.getHeight() / 6;
-            final var x = origin.getX() + insetx;
-            final var y = origin.getY() + insety;
-            final var w = dim.getWidth() - 2 * insetx;
-            final var h = dim.getHeight() - 2 * insety;
+            double insetx = dim.getWidth() / 6;
+            double insety = dim.getHeight() / 6;
+            double x = origin.getX() + insetx;
+            double y = origin.getY() + insety;
+            double w = dim.getWidth() - 2 * insetx;
+            double h = dim.getHeight() - 2 * insety;
             final var currentTransform = g.getTransform();
             final var currentStroke = g.getStroke();
             final var currentColor = g.getColor();

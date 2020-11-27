@@ -26,15 +26,17 @@ import java.awt.geom.Point2D;
 
 /**
  *  A Cartesian grid map composed of square tiles.
+ *
+ * @param <RT> Type of tiles
  */
-public class RectTileMap extends GridTileMap<RectTile, RectTileCoord, RectTileDimension> {
+public class RectTileMap<RT extends RectTile> extends GridTileMap<RT, RectTileCoord, RectTileDimension> {
 
     /**
      * Construct a new map.
      *
      * @param tiles The tiles for this map.
      */
-    public RectTileMap(RectTile tiles[][]) {
+    public RectTileMap(RT tiles[][]) {
         super(tiles);
     }
 

@@ -26,9 +26,11 @@ import org.bondolo.tiles.TileMapView;
 
 /**
  * A view onto a map composed of square tiles.
+ *
+ * @param <RT> Type of tiles
  */
 @SuppressWarnings("serial")
-public class RectMapView extends TileMapView<RectTileMap, RectTile, RectTileDimension, RectTileCoord> {
+public class RectMapView<RT extends RectTile> extends TileMapView<RectTileMap<RT>, RT, RectTileDimension, RectTileCoord> {
 
     /**
      * Construct a new map view.
@@ -37,7 +39,7 @@ public class RectMapView extends TileMapView<RectTileMap, RectTile, RectTileDime
      * @param scales The scales for this map.
      * @param initialScale The initial scale.
      */
-    public RectMapView(RectTileMap map, RectTileDimension scales[], int initialScale) {
+    public RectMapView(RectTileMap<RT> map, RectTileDimension scales[], int initialScale) {
         super(map, scales, initialScale);
     }
 

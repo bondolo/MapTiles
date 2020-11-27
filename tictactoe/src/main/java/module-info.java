@@ -23,6 +23,6 @@
 module org.bondolo.tictactoe {
     exports org.bondolo.tictactoe;
 
-    requires java.desktop;
-    requires org.bondolo.tiles;
+    requires transitive java.desktop;
+    requires transitive org.bondolo.tiles;
 }

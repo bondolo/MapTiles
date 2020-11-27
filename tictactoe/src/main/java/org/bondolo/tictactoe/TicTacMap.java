@@ -32,7 +32,7 @@ import static org.bondolo.tictactoe.TicTacTile.TileState.X;
 /**
  * Implements the game logic for Tic Tac Toe game.
  */
-public class TicTacMap extends RectTileMap {
+public class TicTacMap extends RectTileMap<TicTacTile> {
 
     private static final int BOARD_SIZE = 3;
 
@@ -55,16 +55,6 @@ public class TicTacMap extends RectTileMap {
         }
 
         return board;
-    }
-
-    @Override
-    public TicTacTile getTile(int x, int y) {
-        return (TicTacTile) super.getTile(x, y);
-    }
-
-    @Override
-    public TicTacTile getTile(RectTileCoord forLoc) {
-        return (TicTacTile) super.getTile(forLoc);
     }
 
     /**
@@ -96,11 +86,11 @@ public class TicTacMap extends RectTileMap {
         TicTacTile first = null;
         TicTacTile second = null;
         TicTacTile third = null;
-        var win = false;
-        var playable = false;
+        boolean win = false;
+        boolean playable = false;
 
         // columns
-        for (var x = 0; !win && x < getXSize(); x++) {
+        for (int x = 0; !win && x < getXSize(); x++) {
             first = getTile(x, 0);
             if (BLANK == first.getState()) {
                 playable = true;
@@ -120,7 +110,7 @@ public class TicTacMap extends RectTileMap {
         }
 
         // rows
-        for (var y = 0; !win && y < getYSize(); y++) {
+        for (int y = 0; !win && y < getYSize(); y++) {
             first = (getTile(0, y));
             if (BLANK == first.getState()) {
                 playable = true;
@@ -182,11 +172,7 @@ public class TicTacMap extends RectTileMap {
      * reset the board to begin a new game.
      */
     public void reset() {
-        for (var x = 0; x < getXSize(); x++) {
-            for (var y = 0; y < getYSize(); y++) {
-                getTile(x, y).setState(BLANK);
-            }
-        }
+        tiles().forEach(tile -> tile.setState(BLANK));
 
         turn = X;
     }

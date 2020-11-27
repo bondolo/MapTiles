@@ -85,8 +85,8 @@ public final class Main {
             }
         }
 
-        var map = new HexTileMap(tiles);
-        var view = new HexMapView(map, TILE_SCALE_DIMENSIONS, INITIAL_SCALE);
+        var map = new HexTileMap<HexTile>(tiles);
+        var view = new HexMapView<HexTile>(map, TILE_SCALE_DIMENSIONS, INITIAL_SCALE);
         view.addMouseListener(new MouseAdapter() {
 
             @Override

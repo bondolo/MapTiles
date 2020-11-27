@@ -26,15 +26,17 @@ import java.awt.geom.Point2D;
 
 /**
  *  A Cartesian grid map composed of hexagonal tiles.
+ *
+ * @param <T> type of the hex tiles in the map.
  */
-public class HexTileMap extends GridTileMap<HexTile, HexTileCoord, HexTileDimension> {
+public class HexTileMap<T extends HexTile> extends GridTileMap<T, HexTileCoord, HexTileDimension> {
 
     /**
      * Construct a new map.
      *
      * @param tiles The tiles for this map.
      */
-    public HexTileMap(HexTile tiles[][]) {
+    public HexTileMap(T tiles[][]) {
         super(tiles);
     }
 
