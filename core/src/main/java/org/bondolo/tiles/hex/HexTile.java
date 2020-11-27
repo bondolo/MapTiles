@@ -25,7 +25,7 @@ import org.bondolo.tiles.grid.GridTile;
 import static java.awt.Color.LIGHT_GRAY;
 import static java.awt.Color.black;
 import java.awt.Graphics2D;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import static java.awt.geom.Path2D.WIND_NON_ZERO;
 import java.awt.geom.Point2D;
 
@@ -54,9 +54,14 @@ public class HexTile extends GridTile<HexTileCoord, HexTileDimension> {
     }
 
 
+    /**
+     * {@inheritDoc}
+     *
+     * @implSpec Draws the outline of the tile in black and optionally fills it with light gray if highlighted
+     */
     @Override
-    public void draw(final Graphics2D g, final Point2D origin, final HexTileDimension dim,boolean highlight) {
-        var p = new GeneralPath(WIND_NON_ZERO, 16);
+    public void draw(Graphics2D g, Point2D origin, HexTileDimension dim, boolean highlight) {
+        var p = new Path2D.Double(WIND_NON_ZERO, 16);
         double x = origin.getX();
         double y = origin.getY();
 

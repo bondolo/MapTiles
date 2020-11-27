@@ -31,7 +31,7 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import static java.awt.geom.Path2D.WIND_NON_ZERO;
 import java.awt.geom.Point2D;
 import javax.swing.UIManager;
@@ -59,19 +59,19 @@ public class TicTacTile extends RectTile {
     /**
      * Our drawing mark for an "O"
      */
-    private final static Shape O = new Ellipse2D.Double(0.0, 0.0, 1.0, 1.0);
+    private final static Shape O_MARK = new Ellipse2D.Double(0.0, 0.0, 1.0, 1.0);
     /**
      * Our drawing mark for an "X".
      */
-    private final static Shape X;
+    private final static Shape X_MARK;
 
     static {
-        var p = new GeneralPath(WIND_NON_ZERO, 6);
+        var p = new Path2D.Double(WIND_NON_ZERO, 6);
         p.moveTo(0, 0);
         p.lineTo(1, 1);
         p.moveTo(1, 0);
         p.lineTo(0, 1);
-        X = p;
+        X_MARK = p;
     }
 
     /**
@@ -85,9 +85,9 @@ public class TicTacTile extends RectTile {
 
     @Override
     public void draw(Graphics2D g, Point2D origin, RectTileDimension dim, boolean highlight) {
-        final var mark = switch (getState()) {
-            case X -> X;
-            case O -> O;
+        var mark = switch (getState()) {
+            case X -> X_MARK;
+            case O -> O_MARK;
             default -> null;
         };
 

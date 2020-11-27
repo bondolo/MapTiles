@@ -25,13 +25,12 @@ import org.bondolo.tiles.grid.GridTile;
 import static java.awt.Color.LIGHT_GRAY;
 import static java.awt.Color.black;
 import java.awt.Graphics2D;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import static java.awt.geom.Path2D.WIND_NON_ZERO;
 import java.awt.geom.Point2D;
 
 /**
  *  A single tile in a triangle tile map.
- *
  */
 public class TriTile extends GridTile<TriTileCoord, TriTileDimension> {
 
@@ -44,18 +43,25 @@ public class TriTile extends GridTile<TriTileCoord, TriTileDimension> {
         super(coords, null);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @implSpec Draws the outline of the tile in black and optionally fills it with light gray if highlighted
+     */
     @Override
     public void draw(final Graphics2D g, Point2D origin, TriTileDimension dim, boolean highlight) {
-        var p = new GeneralPath(WIND_NON_ZERO, 10);
+        var p = new Path2D.Double(WIND_NON_ZERO, 10);
         double x = origin.getX();
         double y = origin.getY();
         double s = dim.getSide();
 
         if((0 != (coord.getX() % 2) ^ (0 != (coord.getY() % 2)))) {
+            // Down pointing
             p.moveTo(x, y);
             p.lineTo(x + s, y);
             p.lineTo(x + (s / 2.0), y + dim.getHeight());
         } else {
+            // Up pointing
             p.moveTo(x + (s / 2.0), y);
             p.lineTo(x + s, y + dim.getHeight());
             p.lineTo(x, y + dim.getHeight());

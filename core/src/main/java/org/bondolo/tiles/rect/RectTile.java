@@ -24,7 +24,7 @@ package org.bondolo.tiles.rect;
 import org.bondolo.tiles.grid.GridTile;
 import static java.awt.Color.LIGHT_GRAY;
 import java.awt.Graphics2D;
-import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import static java.awt.geom.Path2D.WIND_NON_ZERO;
 import java.awt.geom.Point2D;
 
@@ -42,9 +42,14 @@ public class RectTile extends GridTile<RectTileCoord, RectTileDimension> {
         super(coords, null);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @implSpec Draws the outline of the tile in black and optionally fills it with light gray if highlighted
+     */
     @Override
     public void draw(final Graphics2D g, final Point2D origin, final RectTileDimension dim, boolean highlight) {
-        var p = new GeneralPath(WIND_NON_ZERO, 10);
+        var p = new Path2D.Double(WIND_NON_ZERO, 10);
         double x = origin.getX();
         double y = origin.getY();
         double s = dim.getSide();

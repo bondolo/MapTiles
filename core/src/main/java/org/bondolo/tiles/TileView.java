@@ -34,10 +34,10 @@ public interface TileView<D extends TileDimension> {
     /**
      * Draw the tile.
      *
-     * @param g The graphics environment to draw into.
+     * @param g2 The graphics environment to draw into.
      * @param origin The origin point at which to draw the tile.
      * @param dim The scaling dimensions to use for tile drawing.
      * @param highlight Draw the tile highlighted.
      */
-    void draw(Graphics2D g, Point2D origin, D dim, boolean highlight);
+    void draw(Graphics2D g2, Point2D origin, D dim, boolean highlight);
 }

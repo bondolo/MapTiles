@@ -95,20 +95,25 @@ public abstract class GridTile<C extends GridTileCoord, D extends GridTileDimens
         return label;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @implSpec Draws the tile coordinates string centered in the tile.
+     */
     @Override
-    public void draw(Graphics2D g, Point2D origin, D dim, boolean highlight) {
+    public void draw(Graphics2D g2, Point2D origin, D dim, boolean highlight) {
         var drawing = toString();
         // XXX This is too much work to be doing for each tile
-        var font = g.getFont().deriveFont((float)(dim.side / 3.0));
+        var font = g2.getFont().deriveFont((float)(dim.side / 3.0));
         if(highlight) {
             font = font.deriveFont(BOLD);
         }
-        g.setFont(font);
+        g2.setFont(font);
 
-        var fm = g.getFontMetrics();
+        var fm = g2.getFontMetrics();
         double drawx = origin.getX() + (dim.getWidth() - fm.stringWidth(drawing)) / 2.0;
         double drawy = origin.getY() + (dim.getHeight() + fm.getAscent()) / 2.0;
 
-        g.drawString( drawing, (float) drawx, (float) drawy);
+        g2.drawString( drawing, (float) drawx, (float) drawy);
     }
 }
