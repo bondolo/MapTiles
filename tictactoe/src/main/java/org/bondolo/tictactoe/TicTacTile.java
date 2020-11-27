@@ -43,6 +43,29 @@ import static org.bondolo.tictactoe.TicTacTile.TileState.BLANK;
 public class TicTacTile extends RectTile {
 
     /**
+     * Our drawing mark for an "O"
+     */
+    private final static Shape O_MARK = new Ellipse2D.Double(0.0, 0.0, 1.0, 1.0);
+
+    /**
+     * Our drawing mark for an "X".
+     */
+    private final static Shape X_MARK;
+    static {
+        var p = new Path2D.Double(WIND_NON_ZERO, 6);
+        p.moveTo(0, 0);
+        p.lineTo(1, 1);
+        p.moveTo(1, 0);
+        p.lineTo(0, 1);
+        X_MARK = p;
+    }
+
+     /**
+     * The drawing stroke we use for drawing the mark on a tile.
+     */
+    private final static Stroke MARK_STROKE = new BasicStroke((float) 0.15, CAP_ROUND, JOIN_ROUND);
+
+    /**
      * Possible tile states.
      */
     public enum TileState {
@@ -56,35 +79,13 @@ public class TicTacTile extends RectTile {
      * The current state of this tile.
      */
     private TileState state = BLANK;
-    /**
-     * Our drawing mark for an "O"
-     */
-    private final static Shape O_MARK = new Ellipse2D.Double(0.0, 0.0, 1.0, 1.0);
-    /**
-     * Our drawing mark for an "X".
-     */
-    private final static Shape X_MARK;
-
-    static {
-        var p = new Path2D.Double(WIND_NON_ZERO, 6);
-        p.moveTo(0, 0);
-        p.lineTo(1, 1);
-        p.moveTo(1, 0);
-        p.lineTo(0, 1);
-        X_MARK = p;
-    }
-
-    /**
-     * The drawing stroke we use for drawing the mark on a tile.
-     */
-    private final static Stroke MARK_STROKE = new BasicStroke((float) 0.15, CAP_ROUND, JOIN_ROUND);
 
     public TicTacTile(RectTileCoord coord) {
         super(coord);
     }
 
     @Override
-    public void draw(Graphics2D g, Point2D origin, RectTileDimension dim, boolean highlight) {
+    public void draw(Graphics2D g2, Point2D origin, RectTileDimension dim, boolean highlight) {
         var mark = switch (getState()) {
             case X -> X_MARK;
             case O -> O_MARK;
@@ -99,21 +100,21 @@ public class TicTacTile extends RectTile {
             double y = origin.getY() + insety;
             double w = dim.getWidth() - 2 * insetx;
             double h = dim.getHeight() - 2 * insety;
-            final var currentTransform = g.getTransform();
-            final var currentStroke = g.getStroke();
-            final var currentColor = g.getColor();
+            final var currentTransform = g2.getTransform();
+            final var currentStroke = g2.getStroke();
+            final var currentColor = g2.getColor();
 
-            g.translate(x, y);
-            g.scale(w, h);
+            g2.translate(x, y);
+            g2.scale(w, h);
 
-            g.setStroke(MARK_STROKE);
-            g.setColor(UIManager.getColor(highlight ? "TextArea.inactiveForeground" : "TextArea.foreground"));
+            g2.setStroke(MARK_STROKE);
+            g2.setColor(UIManager.getColor(highlight ? "TextArea.inactiveForeground" : "TextArea.foreground"));
 
-            g.draw(mark);
+            g2.draw(mark);
 
-            g.setTransform(currentTransform);
-            g.setStroke(currentStroke);
-            g.setColor(currentColor);
+            g2.setTransform(currentTransform);
+            g2.setStroke(currentStroke);
+            g2.setColor(currentColor);
         }
     }
 
