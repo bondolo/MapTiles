@@ -30,7 +30,7 @@ import javax.swing.JFrame;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
- * Mini-demo for tiles.
+ * Tic Tac Toe mini-demo for tiles
  */
 public final class Main {
 
@@ -73,7 +73,7 @@ public final class Main {
         // click to play
         view.addMouseListener(new MouseAdapter() {
 
-            TicTacTile lastClick = null;
+            private TicTacTile lastClick = null;
 
             @Override
             public void mouseClicked(MouseEvent e) {
