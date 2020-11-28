@@ -55,8 +55,9 @@ public final class HexTileDimension extends GridTileDimension {
      */
     public HexTileDimension(final int side) {
         super(side);
-        this.h = side / 2.0;   // same as tileSize * Math.sin(Math.toRadians(30));
-        this.r = side * Math.cos(PI / 6.0); // 30 degrees
+        double s = (double) side;
+        this.h = Math.scalb(s, -1);   // same as tileSize * Math.sin(Math.toRadians(30));
+        this.r = s * Math.cos(PI / 6.0); // 30 degrees
         this.a = Math.scalb(r, 1); // same as 2 * r
         this.b = side * 2; // same as side + 2 * h;
     }
@@ -79,7 +80,7 @@ public final class HexTileDimension extends GridTileDimension {
     @Override
     public double area() {
         // per Wikipedia (rearranged to minimize propagated error)
-        return 3.0 * Math.sqrt(3.0) * Math.pow(side, 2.0) / 2.0;
+        return Math.scalb(3.0 * Math.sqrt(3.0) * (side * side), -1);
     }
 
     @Override

@@ -42,7 +42,7 @@ public abstract class GridTileDimension implements TileDimension {
     protected GridTileDimension(int side) throws IllegalArgumentException {
         if (side < 0) {
             throw new IllegalArgumentException("side must be non-negative");
-        };
+        }
 
         this.side = side;
     }
@@ -55,20 +55,4 @@ public abstract class GridTileDimension implements TileDimension {
     public int getSide() {
         return side;
     }
-
-    /**
-     * The getWidth of the bounding box for this tile.
-     *
-     * @return getWidth of the bounding box for this tile.
-     */
-    @Override
-    public abstract double getWidth();
-
-    /**
-     * The getHeight of the bounding box for this tile.
-     *
-     * @return getHeight of the bounding box for this tile.
-     */
-    @Override
-    public abstract double getHeight();
 }

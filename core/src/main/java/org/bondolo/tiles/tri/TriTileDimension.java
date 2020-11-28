@@ -56,7 +56,7 @@ public class TriTileDimension extends GridTileDimension {
 
     @Override
     public double getHeight() {
-        return side * sqrt(3.0) / 2.0;
+        return Math.scalb(side * sqrt(3.0), -1);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TriTileDimension extends GridTileDimension {
 
     @Override
     public double area() {
-        return (side << 1) * sqrt(3.0) / 4.0;
+        return Math.scalb((side << 1) * sqrt(3.0), -2);
     }
 
     @Override

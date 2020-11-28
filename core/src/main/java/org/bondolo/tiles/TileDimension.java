@@ -55,16 +55,14 @@ public interface TileDimension {
     double perimeter();
 
     /**
-     * The area of the tile bounding box (smallest box which completely
-     * encompasses the tile).
+     * The area of the tile bounding box (smallest box which completely encompasses the tile).
      *
      * @return map tile bounding box area as a unitless dimension.
      */
     double boundingArea();
 
     /**
-     * The perimeter of the tile bounding box (smallest box which completely
-     * encompasses the tile).
+     * The perimeter of the tile bounding box (smallest box which completely encompasses the tile).
      *
      * @return map tile bounding box perimeter as a unitless dimension.
      */

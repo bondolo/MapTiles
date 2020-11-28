@@ -28,7 +28,7 @@ import java.awt.geom.Point2D;
 import java.util.Objects;
 
 /**
- * A single tile in a Cartesian grid map.
+ * A single tile and tile view in a Cartesian grid map.
  *
  * @param <C> Coordinate class for this class.
  * @param <D> Dimension class for this class.
