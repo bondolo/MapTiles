@@ -7,8 +7,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>org.bondolo</groupId>
-    <artifactId>pegs</artifactId>
-    <name>Peg Solitaire</name>
+    <artifactId>sliding</artifactId>
+    <name>Sliding Tiles</name>
     <dependencies>
         <dependency>
             <groupId>org.bondolo</groupId>
@@ -40,7 +40,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.5</version>
                 <configuration>
-                    <mainClass>org.bondolo.pegs.Main</mainClass>
+                    <mainClass>org.bondolo.sliding/org.bondolo.sliding.Main</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -84,4 +84,5 @@
             </plugin>
         </plugins>
     </build>
+    <description>Simple JavaFX demo "Sliding Tiles" game for Map Tiles</description>
 </project>

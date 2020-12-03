@@ -1,6 +1,6 @@
-module org.bondolo.pegs {
+module org.bondolo.sliding {
     requires javafx.controls;
     requires org.bondolo.tiles;
-    
-    exports org.bondolo.pegs;
+
+    exports org.bondolo.sliding;
 }

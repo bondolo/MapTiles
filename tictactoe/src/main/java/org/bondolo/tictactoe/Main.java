@@ -99,16 +99,17 @@ public final class Main {
                 }
 
                 final var tile = map.getTile(coord);
-
-                if (map.play(tile)) {
-                    // draw clicked
-                    view.addToSelection(tile);
-                    lastClick = tile;
-                    theWin = map.checkForWin();
-                    theWin.ifPresent(view::setSelection);
-                } else {
-                    lastClick = null;
-                }
+                tile.ifPresent(t -> {
+                    if (map.play(t)) {
+                        // draw clicked
+                        view.addToSelection(t);
+                        lastClick = t;
+                        var aWin = map.checkForWin();
+                        aWin.ifPresent(view::setSelection); // show the win
+                    } else {
+                        lastClick = null;
+                    }
+                });
             }
         });
 

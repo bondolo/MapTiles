@@ -172,7 +172,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
      * @return The tile coordinates.
      */
     public final C pointToCoord(Point2D point) {
-        return map.pointToCoord(point, getDimension(scale));
+        return pointToCoord(point, getDimension(scale));
     }
 
     /**
@@ -182,7 +182,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
      * @return The point closest to the origin (0,0) for the tile at the specified coordinate.
      */
     public final Point2D coordToPoint(C coord) {
-        return map.coordToPoint(coord, getDimension(scale));
+        return coordToPoint(coord, getDimension(scale));
     }
 
     /**
@@ -195,7 +195,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
         if (selection.add(tile)) {
             // repaint tile if added
             var dim = getDimension(scale);
-            var origin = map.coordToPoint(tile.getCoord(), dim);
+            var origin = coordToPoint(tile.getCoord(), dim);
             repaint((int) origin.getX(), (int) origin.getY(), (int) dim.getWidth(), (int) dim.getHeight());
         }
     }
@@ -210,7 +210,7 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
         if (selection.remove(tile)) {
             // repaint tile if removed
             var dim = getDimension(scale);
-            var origin = map.coordToPoint(tile.getCoord(), dim);
+            var origin = coordToPoint(tile.getCoord(), dim);
             repaint((int) origin.getX(), (int) origin.getY(), (int) dim.getWidth(), (int) dim.getHeight());
         }
     }
@@ -296,5 +296,46 @@ public abstract class TileMapView<M extends TileMap<T, C, D>, T extends Tile<C> 
 
             tile.draw(g, origin, dim, isSelected(tile));
         }
+    }
+
+    /**
+     * Return the coordinate associated with the specified point considering the
+     * provided dimensions.
+     *
+     * @param point The point who's coordinate is desired.
+     * @param dim The tile dimensions to use when mapping from point to
+     * coordinate.
+     * @return The coordinates of the tile for the specified point or
+     * {@code null} if the point does not lie within a tile on the the map.
+     */
+    public abstract C pointToCoord(Point2D point, D dim);
+
+    /**
+     * Returns the point closest to the origin point for the tile at the
+     * specified coordinates.
+     *
+     * @param coord The coordinate who's origin point is desired.
+     * @param dim The tile dimensions to use when mapping from coordinates to
+     * a point.
+     * @return The point closest to the origin (0,0) for the tile at the
+     * specified coordinate.
+     */
+    public abstract Point2D coordToPoint(C coord, D dim);
+
+    /**
+     * Returns the center point of the specified coordinate for the specified dimension.
+     *
+     * HACK : This does not work for triangles and non-regular hexagons.
+     *
+     * @param coord coordinate who's center point is desired.
+     * @param dim dimension to be used in determining the point.
+     * @return The point location.
+     */
+    public Point2D coordToCentroidPoint(C coord, D dim) {
+        var origin = coordToPoint(coord, dim);
+
+        origin.setLocation(origin.getX() + dim.getWidth() / 2, origin.getY() + dim.getHeight() / 2);
+
+        return origin;
     }
 }

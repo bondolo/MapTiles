@@ -22,6 +22,7 @@
 package org.bondolo.tiles.rect;
 
 import java.awt.Dimension;
+import java.awt.geom.Point2D;
 import org.bondolo.tiles.TileMapView;
 
 /**
@@ -51,5 +52,26 @@ public class RectMapView<RT extends RectTile> extends TileMapView<RectTileMap<RT
                 (int) (dim.getWidth() * map.getXSize()) + 1,
                 (int) (dim.getHeight() * map.getYSize()) + 1
                 );
+    }
+
+    @Override
+    public RectTileCoord pointToCoord(Point2D point, RectTileDimension dim) {
+        int coord_x = (int) (point.getX() / dim.getSide());
+        int coord_y = (int) (point.getY() / dim.getSide());
+
+        return (coord_x < 0) || (coord_x >= map.getXSize()) ||
+                (coord_y < 0) || (coord_y >= map.getYSize())
+            ? null
+            : new RectTileCoord(coord_x, coord_y);
+    }
+
+    @Override
+    public Point2D coordToPoint(RectTileCoord coord, RectTileDimension dim) {
+        int coord_x = coord.getX();
+        int coord_y = coord.getY();
+        double pixel_x = coord_x * dim.getWidth();
+        double pixel_y = coord_y * dim.getHeight();
+
+        return new Point2D.Double(pixel_x, pixel_y);
     }
 }

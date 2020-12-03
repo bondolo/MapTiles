@@ -25,7 +25,7 @@
     <modules>
         <module>core</module>
         <module>tictactoe</module>
-      <module>pegs</module>
+      <module>sliding</module>
   </modules>
 
     <build>

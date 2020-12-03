@@ -99,14 +99,16 @@ public final class Main {
                     var origin = view.coordToPoint(coord);
                     var dim = view.getDimension(view.getScale());
                     var tile = map.getTile(coord);
-                    var wasSelected = view.isSelected(tile);
-                    if (!wasSelected) {
-                        view.addToSelection(tile);
-                    } else {
-                        view.removeFromSelection(tile);
-                    }
-                    System.out.println((wasSelected ? "Deselected" : "Selected") + " tile " + tile);
-                    tile.draw((Graphics2D) view.getGraphics(), origin, dim, !wasSelected);
+                    tile.ifPresent(t -> {
+                        var wasSelected = view.isSelected(t);
+                        if (wasSelected) {
+                            view.removeFromSelection(t);
+                        } else {
+                            view.addToSelection(t);
+                        }
+                        System.out.println((wasSelected ? "Deselected" : "Selected") + " tile " + t);
+                        t.draw((Graphics2D) view.getGraphics(), origin, dim, !wasSelected);
+                    });
                 }
             }
         });

@@ -22,7 +22,6 @@
 package org.bondolo.tiles.rect;
 
 import org.bondolo.tiles.grid.GridTileMap;
-import java.awt.geom.Point2D;
 
 /**
  *  A Cartesian grid map composed of square tiles.
@@ -38,26 +37,5 @@ public class RectTileMap<RT extends RectTile> extends GridTileMap<RT, RectTileCo
      */
     public RectTileMap(RT tiles[][]) {
         super(tiles);
-    }
-
-    @Override
-    public RectTileCoord pointToCoord(Point2D point, RectTileDimension dim) {
-        int coord_x = (int) (point.getX() / dim.getSide());
-        int coord_y = (int) (point.getY() / dim.getSide());
-
-        return (coord_x < 0) || (coord_x >= getXSize()) ||
-                (coord_y < 0) || (coord_y >= getYSize())
-            ? null
-            : new RectTileCoord(coord_x, coord_y);
-    }
-
-    @Override
-    public Point2D coordToPoint(RectTileCoord coord, RectTileDimension dim) {
-        int coord_x = coord.getX();
-        int coord_y = coord.getY();
-        double pixel_x = coord_x * dim.getWidth();
-        double pixel_y = coord_y * dim.getHeight();
-
-        return new Point2D.Double(pixel_x, pixel_y);
     }
 }

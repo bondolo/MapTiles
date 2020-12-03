@@ -22,10 +22,10 @@
 package org.bondolo.tiles.grid;
 
 import org.bondolo.tiles.*;
-import java.awt.geom.Point2D;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -119,28 +119,10 @@ public abstract class GridTileMap<T extends GridTile<C, D>, C extends GridTileCo
     }
 
     @Override
-    public T getTile(C forLoc) {
+    public Optional<T> getTile(C forLoc) {
         int x = forLoc.getX();
         int y = forLoc.getY();
 
-        return getTile(x, y);
-    }
-
-    /**
-     * Returns the center point of the specified coordinate for the specified dimension.
-     *
-     * HACK : This does not work for triangles and non-regular hexagons.
-     *
-     * @param coord coordinate who's center point is desired.
-     * @param dim dimension to be used in determining the point.
-     * @return The point location.
-     */
-    @Override
-    public Point2D coordToCentroidPoint(C coord, D dim) {
-        var origin = coordToPoint(coord, dim);
-
-        origin.setLocation(origin.getX() + dim.getWidth() / 2, origin.getY() + dim.getHeight() / 2);
-
-        return origin;
+        return Optional.of(getTile(x, y));
     }
 }

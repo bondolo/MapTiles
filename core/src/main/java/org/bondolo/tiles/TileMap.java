@@ -21,11 +21,11 @@
  */
 package org.bondolo.tiles;
 
-import java.awt.geom.Point2D;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- *  A map composed of {@link Tile Tiles}.
+ * A map composed of {@link Tile Tiles}.
  *
  * @param <T> Class of tiles in the map.
  * @param <C> Class of tile coordinates used in the map.
@@ -36,10 +36,16 @@ public interface TileMap<T extends Tile<C>, C extends TileCoord, D extends TileD
     /**
      * Retrieves the tile associated with the specified coordinates.
      *
+     * @implSpec The default implementation is <strong>O</strong>(n)
+     *
      * @param forTile The coordinates of the tile to be retrieved.
-     * @return The tile.
+     * @return The tile or empty result if the coordinates do match any tile in the map.
      */
-    T getTile(C forTile);
+    default Optional<T> getTile(C forTile) {
+        return tiles()
+                .filter(t -> t.getCoord().equals(forTile))
+                .findFirst();
+    }
 
     /**
      * Returns a stream of the tiles in the map.
@@ -47,37 +53,4 @@ public interface TileMap<T extends Tile<C>, C extends TileCoord, D extends TileD
      * @return a stream of the tiles in the map.
      */
     Stream<T> tiles();
-
-    /**
-     * Return the coordinate associated with the specified point considering the
-     * provided dimensions.
-     *
-     * @param point The point who's coordinate is desired.
-     * @param dim The tile dimensions to use when mapping from point to
-     * coordinate.
-     * @return The coordinates of the tile for the specified point or
-     * {@code null} if the point does not lie within a tile on the the map.
-     */
-    C pointToCoord(Point2D point, D dim);
-
-    /**
-     * Returns the point closest to the origin point for the tile at the
-     * specified coordinates.
-     *
-     * @param coord The coordinate who's origin point is desired.
-     * @param dim The tile dimensions to use when mapping from coordinates to
-     * a point.
-     * @return The point closest to the origin (0,0) for the tile at the
-     * specified coordinate.
-     */
-    Point2D coordToPoint(C coord, D dim);
-
-    /**
-    * Returns the center point of the specified coordinate for the specified dimension.
-    *
-    * @param coord coordinate who's center point is desired.
-    * @param dim dimension to be used in determining the point.
-    * @return The point location.
-    */
-    Point2D coordToCentroidPoint(C coord, D dim);
 }
